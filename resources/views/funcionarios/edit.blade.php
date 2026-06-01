@@ -1,0 +1,50 @@
+@extends('layouts.app')
+@section('titulo', 'Editar Funcionário')
+
+@section('conteudo')
+<div class="max-w-2xl">
+    <div class="flex items-center gap-3 mb-6">
+        <a href="{{ route('funcionarios.index') }}" class="text-gray-400 hover:text-gray-600">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        </a>
+        <h2 class="text-xl font-bold text-gray-800">Editar Funcionário</h2>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm p-6">
+        <form method="POST" action="{{ route('funcionarios.update', $funcionario) }}" class="space-y-4">
+            @csrf @method('PATCH')
+            <h3 class="text-sm font-semibold text-gray-500 uppercase">Dados de Acesso</h3>
+            <x-input-field label="Nome completo" name="name" required :value="$funcionario->usuario->name" />
+            <x-input-field label="E-mail" name="email" type="email" required :value="$funcionario->usuario->email" />
+
+            <h3 class="text-sm font-semibold text-gray-500 uppercase pt-2 border-t">Dados do Funcionário</h3>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Cargo <span class="text-red-500">*</span></label>
+                <select name="cargo_id" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    @foreach($cargos as $cargo)
+                    <option value="{{ $cargo->id }}" {{ old('cargo_id', $funcionario->cargo_id) == $cargo->id ? 'selected' : '' }}>{{ $cargo->nome }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <x-input-field label="CPF" name="cpf" required :value="$funcionario->cpf" />
+                <x-input-field label="Telefone" name="telefone" required :value="$funcionario->telefone" />
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <x-input-field label="Data de Admissão" name="data_admissao" type="date" required :value="$funcionario->data_admissao->format('Y-m-d')" />
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <select name="status" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="ativo" {{ old('status', $funcionario->status) === 'ativo' ? 'selected' : '' }}>Ativo</option>
+                        <option value="inativo" {{ old('status', $funcionario->status) === 'inativo' ? 'selected' : '' }}>Inativo</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-4 border-t">
+                <a href="{{ route('funcionarios.index') }}" class="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">Cancelar</a>
+                <x-btn-primary>Atualizar Funcionário</x-btn-primary>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection
