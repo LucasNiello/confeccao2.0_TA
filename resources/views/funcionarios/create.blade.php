@@ -10,6 +10,18 @@
         <h2 class="text-xl font-bold text-gray-800">Novo Funcionário</h2>
     </div>
     <div class="bg-white rounded-xl shadow-sm p-6 space-y-6">
+
+        @if($errors->any())
+        <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+            <p class="text-sm font-medium text-red-700 mb-1">Corrija os erros abaixo antes de salvar:</p>
+            <ul class="list-disc list-inside text-sm text-red-600 space-y-0.5">
+                @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
         <form method="POST" action="{{ route('funcionarios.store') }}" class="space-y-4">
             @csrf
             <h3 class="text-sm font-semibold text-gray-500 uppercase">Dados de Acesso</h3>
@@ -21,16 +33,28 @@
             </div>
 
             <h3 class="text-sm font-semibold text-gray-500 uppercase pt-2 border-t border-gray-100">Dados do Funcionário</h3>
-            <div>
+
+            @php
+                $cargosJson = $cargos->mapWithKeys(fn($c) => [
+                    $c->id => ['nome' => $c->nome, 'descricao' => $c->descricao ?? '']
+                ])->toJson();
+            @endphp
+
+            <div x-data="{ cargoSelecionado: '{{ old('cargo_id', '') }}', cargos: {{ $cargosJson }} }">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Cargo <span class="text-red-500">*</span></label>
-                <select name="cargo_id" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('cargo_id') border-red-500 @enderror">
+                <select name="cargo_id" required x-model="cargoSelecionado"
+                        class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('cargo_id') border-red-500 @else border-gray-300 @enderror">
                     <option value="">Selecione o cargo</option>
                     @foreach($cargos as $cargo)
                     <option value="{{ $cargo->id }}" {{ old('cargo_id') == $cargo->id ? 'selected' : '' }}>{{ $cargo->nome }}</option>
                     @endforeach
                 </select>
+                <p x-show="cargoSelecionado && cargos[cargoSelecionado] && cargos[cargoSelecionado].descricao"
+                   x-text="cargos[cargoSelecionado] ? cargos[cargoSelecionado].descricao : ''"
+                   class="mt-1 text-xs text-gray-500 italic"></p>
                 @error('cargo_id')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
             </div>
+
             <div class="grid grid-cols-2 gap-4">
                 <x-input-field label="CPF" name="cpf" required placeholder="000.000.000-00" />
                 <x-input-field label="Telefone" name="telefone" required placeholder="(19) 99999-9999" />
@@ -39,10 +63,12 @@
                 <x-input-field label="Data de Admissão" name="data_admissao" type="date" required />
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Status <span class="text-red-500">*</span></label>
-                    <select name="status" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="ativo" {{ old('status', 'ativo') === 'ativo' ? 'selected' : '' }}>Ativo</option>
+                    <select name="status"
+                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('status') border-red-500 @enderror">
+                        <option value="ativo"   {{ old('status', 'ativo') === 'ativo'   ? 'selected' : '' }}>Ativo</option>
                         <option value="inativo" {{ old('status') === 'inativo' ? 'selected' : '' }}>Inativo</option>
                     </select>
+                    @error('status')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
                 </div>
             </div>
 

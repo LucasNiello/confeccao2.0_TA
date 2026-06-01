@@ -3,9 +3,22 @@
 
 @section('conteudo')
 <div class="flex items-center justify-between mb-6">
-    <h2 class="text-xl font-bold text-gray-800">Usuários do Sistema</h2>
-    <a href="{{ route('usuarios.create') }}" class="inline-flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white font-medium text-sm px-4 py-2 rounded-lg transition">+ Novo Usuário</a>
+    <div>
+        <h2 class="text-xl font-bold text-gray-800">Usuários do Sistema</h2>
+        <p class="text-sm text-gray-500">{{ $usuarios->total() }} usuários</p>
+    </div>
+    <div class="flex items-center gap-2">
+        <a href="{{ route('funcionarios.create') }}"
+           class="inline-flex items-center gap-2 border border-blue-700 text-blue-700 hover:bg-blue-50 font-medium text-sm px-4 py-2 rounded-lg transition">
+            + Novo Funcionário
+        </a>
+        <a href="{{ route('usuarios.create') }}"
+           class="inline-flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white font-medium text-sm px-4 py-2 rounded-lg transition">
+            + Novo Usuário
+        </a>
+    </div>
 </div>
+
 <div class="bg-white rounded-xl shadow-sm overflow-hidden">
     <table class="w-full text-sm">
         <thead class="bg-gray-50">
@@ -14,6 +27,7 @@
                 <th class="text-left px-4 py-3 text-gray-500 font-medium">E-mail</th>
                 <th class="text-center px-4 py-3 text-gray-500 font-medium">Perfil</th>
                 <th class="text-center px-4 py-3 text-gray-500 font-medium">Status</th>
+                <th class="text-center px-4 py-3 text-gray-500 font-medium">Funcionário</th>
                 <th class="text-right px-4 py-3 text-gray-500 font-medium">Ações</th>
             </tr>
         </thead>
@@ -32,8 +46,24 @@
                         {{ $usuario->ativo ? 'Ativo' : 'Inativo' }}
                     </span>
                 </td>
+                <td class="px-4 py-3 text-center">
+                    @if($usuario->perfil === 'funcionario')
+                        @if($usuario->funcionario)
+                            <a href="{{ route('funcionarios.show', $usuario->funcionario) }}"
+                               class="text-xs text-blue-600 hover:underline">Ver perfil</a>
+                        @else
+                            <a href="{{ route('funcionarios.create') }}"
+                               class="text-xs text-yellow-600 hover:underline" title="Perfil incompleto — clique para completar">
+                                Incompleto ⚠
+                            </a>
+                        @endif
+                    @else
+                        <span class="text-xs text-gray-300">—</span>
+                    @endif
+                </td>
                 <td class="px-4 py-3 text-right">
                     <div class="flex items-center justify-end gap-2">
+                        <a href="{{ route('usuarios.show', $usuario) }}" class="text-blue-600 hover:underline text-xs">Ver</a>
                         <a href="{{ route('usuarios.edit', $usuario) }}" class="text-gray-600 hover:underline text-xs">Editar</a>
                         @if($usuario->id !== auth()->id())
                         <form method="POST" action="{{ route('usuarios.destroy', $usuario) }}" onsubmit="return confirm('Excluir este usuário?')">
@@ -45,7 +75,7 @@
                 </td>
             </tr>
             @empty
-            <tr><td colspan="5" class="px-4 py-10 text-center text-gray-400">Nenhum usuário cadastrado.</td></tr>
+            <tr><td colspan="6" class="px-4 py-10 text-center text-gray-400">Nenhum usuário cadastrado.</td></tr>
             @endforelse
         </tbody>
     </table>

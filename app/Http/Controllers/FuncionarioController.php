@@ -31,7 +31,7 @@ class FuncionarioController extends Controller
 
     public function store(StoreFuncionarioRequest $request)
     {
-        DB::transaction(function () use ($request) {
+        $funcionario = DB::transaction(function () use ($request) {
             $usuario = User::create([
                 'name'     => $request->name,
                 'email'    => $request->email,
@@ -40,7 +40,7 @@ class FuncionarioController extends Controller
                 'ativo'    => true,
             ]);
 
-            $funcionario = Funcionario::create([
+            return Funcionario::create([
                 'usuario_id'    => $usuario->id,
                 'cargo_id'      => $request->cargo_id,
                 'cpf'           => $request->cpf,
@@ -48,12 +48,18 @@ class FuncionarioController extends Controller
                 'data_admissao' => $request->data_admissao,
                 'status'        => $request->status,
             ]);
-
-            Mail::to($usuario->email)->send(new FuncionarioCadastradoMail($funcionario->load('cargo', 'usuario')));
         });
 
-        return redirect()->route('funcionarios.index')
-            ->with('sucesso', 'Funcionário cadastrado com sucesso. E-mail de boas-vindas enviado.');
+        $mensagem = 'Funcionário cadastrado com sucesso.';
+        try {
+            Mail::to($funcionario->usuario->email)
+                ->send(new FuncionarioCadastradoMail($funcionario->load('cargo', 'usuario')));
+            $mensagem .= ' E-mail de boas-vindas enviado.';
+        } catch (\Exception) {
+            $mensagem .= ' (E-mail não pôde ser enviado — verifique o Mailpit.)';
+        }
+
+        return redirect()->route('funcionarios.index')->with('sucesso', $mensagem);
     }
 
     public function show(Funcionario $funcionario)
@@ -88,7 +94,7 @@ class FuncionarioController extends Controller
             ]);
         });
 
-        return redirect()->route('funcionarios.index')
+        return redirect()->route('funcionarios.show', $funcionario)
             ->with('sucesso', 'Funcionário atualizado com sucesso.');
     }
 

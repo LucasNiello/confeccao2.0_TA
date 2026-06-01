@@ -12,18 +12,56 @@
         </div>
         <a href="{{ route('funcionarios.edit', $funcionario) }}" class="inline-flex items-center gap-2 bg-blue-700 hover:bg-blue-800 text-white font-medium text-sm px-4 py-2 rounded-lg transition">Editar</a>
     </div>
-    <div class="bg-white rounded-xl shadow-sm p-6">
-        <dl class="grid grid-cols-2 gap-4">
-            <div><dt class="text-xs text-gray-400">Nome</dt><dd class="text-sm font-medium text-gray-800">{{ $funcionario->usuario->name }}</dd></div>
-            <div><dt class="text-xs text-gray-400">E-mail</dt><dd class="text-sm text-gray-800">{{ $funcionario->usuario->email }}</dd></div>
-            <div><dt class="text-xs text-gray-400">Cargo</dt><dd class="text-sm text-gray-800">{{ $funcionario->cargo->nome }}</dd></div>
-            <div><dt class="text-xs text-gray-400">CPF</dt><dd class="text-sm text-gray-800">{{ $funcionario->cpf }}</dd></div>
-            <div><dt class="text-xs text-gray-400">Telefone</dt><dd class="text-sm text-gray-800">{{ $funcionario->telefone }}</dd></div>
-            <div><dt class="text-xs text-gray-400">Admissão</dt><dd class="text-sm text-gray-800">{{ $funcionario->data_admissao->format('d/m/Y') }}</dd></div>
-            <div><dt class="text-xs text-gray-400">Status</dt>
-                <dd><span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium {{ $funcionario->status === 'ativo' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600' }}">{{ ucfirst($funcionario->status) }}</span></dd>
-            </div>
-        </dl>
+
+    <div class="bg-white rounded-xl shadow-sm p-6 space-y-6">
+
+        <div>
+            <h3 class="text-xs font-semibold text-gray-400 uppercase mb-3">Dados de Acesso</h3>
+            <dl class="grid grid-cols-2 gap-4">
+                <div>
+                    <dt class="text-xs text-gray-400">Nome</dt>
+                    <dd class="text-sm font-medium text-gray-800">{{ $funcionario->usuario->name }}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs text-gray-400">E-mail</dt>
+                    <dd class="text-sm text-gray-800">{{ $funcionario->usuario->email }}</dd>
+                </div>
+            </dl>
+        </div>
+
+        <div class="border-t pt-4">
+            <h3 class="text-xs font-semibold text-gray-400 uppercase mb-3">Dados do Funcionário</h3>
+            <dl class="grid grid-cols-2 gap-4">
+                <div>
+                    <dt class="text-xs text-gray-400">Cargo</dt>
+                    <dd class="text-sm font-medium text-gray-800">{{ $funcionario->cargo->nome }}</dd>
+                    @if($funcionario->cargo->descricao)
+                    <dd class="text-xs text-gray-500 italic mt-0.5">{{ $funcionario->cargo->descricao }}</dd>
+                    @endif
+                </div>
+                <div>
+                    <dt class="text-xs text-gray-400">CPF</dt>
+                    <dd class="text-sm text-gray-800">{{ $funcionario->cpf }}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs text-gray-400">Telefone</dt>
+                    <dd class="text-sm text-gray-800">{{ $funcionario->telefone }}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs text-gray-400">Admissão</dt>
+                    <dd class="text-sm text-gray-800">{{ $funcionario->data_admissao->format('d/m/Y') }}</dd>
+                </div>
+                <div>
+                    <dt class="text-xs text-gray-400">Status</dt>
+                    <dd class="mt-0.5">
+                        <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium {{ $funcionario->status === 'ativo' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600' }}">
+                            {{ ucfirst($funcionario->status) }}
+                        </span>
+                    </dd>
+                </div>
+            </dl>
+        </div>
+
     </div>
 </div>
 @endsection

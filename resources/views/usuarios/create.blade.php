@@ -9,6 +9,13 @@
         </a>
         <h2 class="text-xl font-bold text-gray-800">Novo Usuário</h2>
     </div>
+
+    <div class="mb-4 bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-sm text-blue-800">
+        <strong>Atenção:</strong> Esta tela cria apenas o acesso de login ao sistema.
+        Para cadastrar um <strong>funcionário completo</strong> (com CPF, cargo e data de admissão),
+        use a seção <a href="{{ route('funcionarios.create') }}" class="underline font-semibold">Funcionários → Novo Funcionário</a>.
+    </div>
+
     <div class="bg-white rounded-xl shadow-sm p-6">
         <form method="POST" action="{{ route('usuarios.store') }}" class="space-y-4">
             @csrf
@@ -22,7 +29,7 @@
                 <label class="block text-sm font-medium text-gray-700 mb-1">Perfil <span class="text-red-500">*</span></label>
                 <select name="perfil" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="funcionario" {{ old('perfil') === 'funcionario' ? 'selected' : '' }}>Funcionário</option>
-                    <option value="admin" {{ old('perfil') === 'admin' ? 'selected' : '' }}>Administrador</option>
+                    <option value="admin"       {{ old('perfil') === 'admin'       ? 'selected' : '' }}>Administrador</option>
                 </select>
             </div>
             <label class="flex items-center gap-2 cursor-pointer">

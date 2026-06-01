@@ -10,6 +10,18 @@
         <h2 class="text-xl font-bold text-gray-800">Editar Funcionário</h2>
     </div>
     <div class="bg-white rounded-xl shadow-sm p-6">
+
+        @if($errors->any())
+        <div class="mb-4 bg-red-50 border border-red-200 rounded-lg p-4">
+            <p class="text-sm font-medium text-red-700 mb-1">Corrija os erros abaixo antes de salvar:</p>
+            <ul class="list-disc list-inside text-sm text-red-600 space-y-0.5">
+                @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
         <form method="POST" action="{{ route('funcionarios.update', $funcionario) }}" class="space-y-4">
             @csrf @method('PATCH')
             <h3 class="text-sm font-semibold text-gray-500 uppercase">Dados de Acesso</h3>
@@ -19,29 +31,33 @@
             <h3 class="text-sm font-semibold text-gray-500 uppercase pt-2 border-t">Dados do Funcionário</h3>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Cargo <span class="text-red-500">*</span></label>
-                <select name="cargo_id" required class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select name="cargo_id" required
+                        class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('cargo_id') border-red-500 @else border-gray-300 @enderror">
                     @foreach($cargos as $cargo)
                     <option value="{{ $cargo->id }}" {{ old('cargo_id', $funcionario->cargo_id) == $cargo->id ? 'selected' : '' }}>{{ $cargo->nome }}</option>
                     @endforeach
                 </select>
+                @error('cargo_id')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
             </div>
             <div class="grid grid-cols-2 gap-4">
-                <x-input-field label="CPF" name="cpf" required :value="$funcionario->cpf" />
-                <x-input-field label="Telefone" name="telefone" required :value="$funcionario->telefone" />
+                <x-input-field label="CPF" name="cpf" required :value="$funcionario->cpf" placeholder="000.000.000-00" />
+                <x-input-field label="Telefone" name="telefone" required :value="$funcionario->telefone" placeholder="(19) 99999-9999" />
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <x-input-field label="Data de Admissão" name="data_admissao" type="date" required :value="$funcionario->data_admissao->format('Y-m-d')" />
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                    <select name="status" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        <option value="ativo" {{ old('status', $funcionario->status) === 'ativo' ? 'selected' : '' }}>Ativo</option>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Status <span class="text-red-500">*</span></label>
+                    <select name="status"
+                            class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('status') border-red-500 @else border-gray-300 @enderror">
+                        <option value="ativo"   {{ old('status', $funcionario->status) === 'ativo'   ? 'selected' : '' }}>Ativo</option>
                         <option value="inativo" {{ old('status', $funcionario->status) === 'inativo' ? 'selected' : '' }}>Inativo</option>
                     </select>
+                    @error('status')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
                 </div>
             </div>
 
             <div class="flex justify-end gap-3 pt-4 border-t">
-                <a href="{{ route('funcionarios.index') }}" class="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">Cancelar</a>
+                <a href="{{ route('funcionarios.show', $funcionario) }}" class="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50">Cancelar</a>
                 <x-btn-primary>Atualizar Funcionário</x-btn-primary>
             </div>
         </form>
