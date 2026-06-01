@@ -1,0 +1,52 @@
+=============================================
+            Usuários do sistema:
+=============================================
+
+    Senha para todos os usuários: password
+
+    Administrador
+        Campo	Valor
+        ----------------------------
+        Email	admin@confeccao.com
+        Senha	password
+        Perfil	admin
+        -----------------------------
+
+    Funcionários
+        Nome	            Email	                        Perfil
+        ---------------------------------------------------------------
+        Ana Paula Ferreira	ana.ferreira@confeccao.com	    funcionario
+        Carlos Eduardo Lima	carlos.lima@confeccao.com	    funcionario
+        Mariana Santos	mariana.santos@confeccao.com	    funcionario
+        Ricardo Oliveira	ricardo.oliveira@confeccao.com	funcionario
+        Fernanda Costa	fernanda.costa@confeccao.com	    funcionario
+        ----------------------------------------------------------------
+    Todos usam a senha password. O admin tem acesso completo; os funcionários têm acesso restrito conforme o perfil deles.
+
+
+=============================================
+                 Mailpit
+=============================================
+
+    O projeto está configurado para usar Mailpit — um servidor de e-mail local para desenvolvimento que captura todos os e-mails sem enviá-los de verdade.
+
+    Como ver os e-mails
+    Acesse o Mailpit no navegador:
+    http://localhost:8025
+
+    Todos os e-mails enviados pelo sistema aparecem lá, incluindo:
+
+    E-mail	Quando é disparado
+    Pedido Criado	Ao criar um novo pedido
+    Status Alterado	Ao mudar o status de um pedido
+    Funcionário Cadastrado	Ao cadastrar um novo funcionário
+    Para o Mailpit funcionar, ele precisa estar rodando.
+    Se ainda não estiver, instale e inicie:
+
+
+    # Via Scoop (Windows)
+    scoop install mailpit
+
+    # Ou baixe o executável direto em: https://github.com/axllent/mailpit/releases
+    mailpit
+    Com o Mailpit rodando na porta 1025 (SMTP) e 8025 (interface web), basta criar/editar um pedido no sistema e o e-mail aparece automaticamente em http://localhost:8025.
