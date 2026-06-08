@@ -760,7 +760,7 @@ Acesse `http://localhost:8000` no navegador.
 
 ---
 
-## 9. Credenciais de Acesso (Seed Padrão)
+## 9. Credenciais de Acesso (Seed Padrão dos Logins e Senhas de teste)
 
 Após executar `php artisan migrate --seed`, os seguintes usuários estarão disponíveis:
 

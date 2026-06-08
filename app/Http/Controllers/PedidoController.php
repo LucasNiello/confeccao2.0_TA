@@ -95,15 +95,22 @@ class PedidoController extends Controller
 
         $pedido->update($request->validated());
 
+        $mensagem = 'Pedido atualizado com sucesso.';
+
         if ($statusAnterior !== $request->status) {
             $cliente = $pedido->cliente;
             if ($cliente->email) {
-                Mail::to($cliente->email)->send(new StatusPedidoAlteradoMail($pedido, $statusAnterior));
+                try {
+                    Mail::to($cliente->email)->send(new StatusPedidoAlteradoMail($pedido, $statusAnterior));
+                    $mensagem .= ' E-mail de notificação enviado ao cliente.';
+                } catch (\Exception) {
+                    $mensagem .= ' (E-mail não pôde ser enviado — verifique o Mailpit.)';
+                }
             }
         }
 
         return redirect()->route('pedidos.show', $pedido)
-            ->with('sucesso', 'Pedido atualizado com sucesso.');
+            ->with('sucesso', $mensagem);
     }
 
     public function destroy(Pedido $pedido)

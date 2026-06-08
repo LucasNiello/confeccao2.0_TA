@@ -29,14 +29,23 @@
             <x-input-field label="E-mail" name="email" type="email" required :value="$funcionario->usuario->email" />
 
             <h3 class="text-sm font-semibold text-gray-500 uppercase pt-2 border-t">Dados do Funcionário</h3>
-            <div>
+            @php
+                $cargosJson = $cargos->mapWithKeys(fn($c) => [
+                    $c->id => ['nome' => $c->nome, 'descricao' => $c->descricao ?? '']
+                ])->toJson();
+            @endphp
+
+            <div x-data="{ cargoSelecionado: '{{ old('cargo_id', $funcionario->cargo_id) }}', cargos: {{ $cargosJson }} }">
                 <label class="block text-sm font-medium text-gray-700 mb-1">Cargo <span class="text-red-500">*</span></label>
-                <select name="cargo_id" required
+                <select name="cargo_id" required x-model="cargoSelecionado"
                         class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('cargo_id') border-red-500 @else border-gray-300 @enderror">
                     @foreach($cargos as $cargo)
                     <option value="{{ $cargo->id }}" {{ old('cargo_id', $funcionario->cargo_id) == $cargo->id ? 'selected' : '' }}>{{ $cargo->nome }}</option>
                     @endforeach
                 </select>
+                <p x-show="cargoSelecionado && cargos[cargoSelecionado] && cargos[cargoSelecionado].descricao"
+                   x-text="cargos[cargoSelecionado] ? cargos[cargoSelecionado].descricao : ''"
+                   class="mt-1 text-xs text-gray-500 italic"></p>
                 @error('cargo_id')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
             </div>
             <div class="grid grid-cols-2 gap-4">
