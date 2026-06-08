@@ -21,7 +21,7 @@ class UpdateFuncionarioRequest extends FormRequest
             'email'         => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->route('funcionario')?->usuario_id)],
             'cargo_id'      => ['required', 'exists:cargos,id'],
             'cpf'           => ['required', 'string', 'size:14', Rule::unique('funcionarios', 'cpf')->ignore($funcionarioId)],
-            'telefone'      => ['required', 'string', 'max:20'],
+            'telefone'      => ['required', 'string', 'regex:/^\(\d{2}\) \d{4,5}-\d{4}$/'],
             'data_admissao' => ['required', 'date'],
             'status'        => ['required', 'in:ativo,inativo'],
         ];
@@ -37,9 +37,10 @@ class UpdateFuncionarioRequest extends FormRequest
             'cargo_id.required'      => 'Selecione o cargo do funcionário.',
             'cargo_id.exists'        => 'O cargo selecionado não existe.',
             'cpf.required'           => 'O CPF é obrigatório.',
-            'cpf.size'               => 'O CPF deve ter 14 caracteres (incluindo pontos e traço).',
+            'cpf.size'               => 'O CPF deve estar no formato 000.000.000-00.',
             'cpf.unique'             => 'Este CPF já está cadastrado.',
             'telefone.required'      => 'O telefone é obrigatório.',
+            'telefone.regex'         => 'Informe o telefone no formato (99) 99999-9999 (celular) ou (99) 9999-9999 (fixo).',
             'data_admissao.required' => 'A data de admissão é obrigatória.',
             'status.required'        => 'O status é obrigatório.',
         ];

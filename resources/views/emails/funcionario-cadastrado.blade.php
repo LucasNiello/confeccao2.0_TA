@@ -29,7 +29,7 @@
                             <p style="color: #475569;">Acesse o sistema através do link abaixo e faça login com seu e-mail cadastrado:</p>
 
                             <div style="text-align: center; margin: 24px 0;">
-                                <a href="{{ config('app.url') }}/login"
+                                <a href="{{ route('login') }}"
                                    style="background-color: #1e40af; color: #ffffff; padding: 12px 32px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block;">
                                     Acessar o Sistema
                                 </a>

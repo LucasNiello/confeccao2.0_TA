@@ -773,8 +773,7 @@ Após executar `php artisan migrate --seed`, os seguintes usuários estarão dis
 | Funcionário | Ricardo Oliveira | `ricardo.oliveira@confeccao.com` | `password` |
 | Funcionário | Fernanda Costa | `fernanda.costa@confeccao.com` | `password` |
 
-> **Atenção:** As credenciais acima são exclusivas para ambiente de desenvolvimento e demonstração. Em ambiente de produção, as senhas devem ser fortes e individualizadas.
-
+> **Atenção:** As credenciais acima são exclusivas para ambiente de desenvolvimento e demonstração. Em ambiente de produção, as senhas devem ser fortes e individualizadas (Criptografado no Banco de dados).
 ---
 
 ## 10. Cenários de Teste
